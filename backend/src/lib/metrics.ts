@@ -132,6 +132,36 @@ export const webhookDispatchFailed = new Counter({
 });
 
 /**
+ * Video transcode job counters/histogram — incremented/observed by the video
+ * transcode job processor on each attempt, success, and failure.
+ * Follows the same per-job-type pattern as filesPrunedTotal/webhookDispatchFailed.
+ */
+export const videoTranscodeAttemptedTotal = new Counter({
+  name: 'video_transcode_attempted_total',
+  help: 'Total number of video transcode job attempts started',
+  registers: [register],
+});
+
+export const videoTranscodeSucceededTotal = new Counter({
+  name: 'video_transcode_succeeded_total',
+  help: 'Total number of video transcode jobs that completed successfully',
+  registers: [register],
+});
+
+export const videoTranscodeFailedTotal = new Counter({
+  name: 'video_transcode_failed_total',
+  help: 'Total number of video transcode jobs that failed with an error',
+  registers: [register],
+});
+
+export const videoTranscodeDuration = new Histogram({
+  name: 'video_transcode_duration_ms',
+  help: 'Video transcode job duration in milliseconds',
+  buckets,
+  registers: [register],
+});
+
+/**
  * TTS job counters — incremented by the TTS job processor on each outcome.
  * `ttsJobTotal` is the denominator for the TTS failure-rate SLI:
  * `ttsJobFailedTotal / ttsJobTotal`.
@@ -148,6 +178,8 @@ export const ttsJobFailedTotal = new Counter({
   help: 'Total number of TTS job processing attempts that failed with an error',
   registers: [register],
 });
+  registers: [register],
+});
 
 /**
  * TTS job processing duration histogram (ms).
@@ -157,6 +189,72 @@ export const ttsJobDuration = new Histogram({
   name: 'tts_job_duration_ms',
   help: 'TTS job processing duration in milliseconds',
   labelNames: ['status'] as const,
+  buckets,
+  registers: [register],
+});
+
+/**
+ * Payout job counters/histogram — incremented/observed by the payout job
+ * processor on each attempt, success, and failure.
+ * Follows the same per-job-type pattern as filesPrunedTotal/webhookDispatchFailed.
+ */
+export const payoutJobAttemptedTotal = new Counter({
+  name: 'payout_job_attempted_total',
+  help: 'Total number of payout job attempts started',
+  registers: [register],
+});
+
+export const payoutJobSucceededTotal = new Counter({
+  name: 'payout_job_succeeded_total',
+  help: 'Total number of payout jobs that completed successfully',
+  registers: [register],
+});
+
+export const payoutJobFailedTotal = new Counter({
+  name: 'payout_job_failed_total',
+  help: 'Total number of payout jobs that failed with an error',
+  registers: [register],
+});
+
+export const payoutJobDuration = new Histogram({
+  name: 'payout_job_duration_ms',
+  help: 'Payout job duration in milliseconds',
+  buckets,
+  registers: [register],
+});
+
+/**
+ * Blockchain-sync job counters/histogram — incremented/observed by the
+ * blockchain-sync (sync-queue) job processor on each attempt, success, and
+ * failure. Follows the same per-job-type pattern as
+ * filesPrunedTotal/webhookDispatchFailed.
+ */
+export const blockchainSyncAttemptedTotal = new Counter({
+  name: 'blockchain_sync_attempted_total',
+  help: 'Total number of blockchain-sync job attempts started',
+  registers: [register],
+});
+
+export const blockchainSyncSucceededTotal = new Counter({
+  name: 'blockchain_sync_succeeded_total',
+  help: 'Total number of blockchain-sync jobs that completed successfully',
+  registers: [register],
+});
+
+export const blockchainSyncFailedTotal = new Counter({
+  name: 'blockchain_sync_failed_total',
+  help: 'Total number of blockchain-sync jobs that failed with an error',
+  registers: [register],
+});
+export const blockchainSyncDuration = new Histogram({
+  name: 'blockchain_sync_duration_ms',
+  help: 'Blockchain-sync job duration in milliseconds',
+  buckets,
+  registers: [register],
+});
+
+/**
+
   buckets,
   registers: [register],
 });

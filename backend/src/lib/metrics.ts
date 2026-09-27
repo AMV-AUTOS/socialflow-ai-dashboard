@@ -112,10 +112,52 @@ export const dataPruningErrorsTotal = new Counter({
   registers: [register],
 });
 
+/**
+ * Total webhook dispatch attempts (success or failure).
+ * Serves as the denominator for the webhook delivery failure-rate SLI:
+ * `webhookDispatchFailed / webhookDispatchTotal`.
+ */
+export const webhookDispatchTotal = new Counter({
+  name: 'webhook_dispatch_total',
+  help: 'Total number of webhook delivery attempts (success or failure)',
+  labelNames: ['subscription_id'] as const,
+  registers: [register],
+});
+
 export const webhookDispatchFailed = new Counter({
   name: 'webhook_dispatch_failed_total',
   help: 'Total number of webhook delivery attempts that failed with an unexpected dispatcher error',
   labelNames: ['subscription_id'] as const,
+  registers: [register],
+});
+
+/**
+ * TTS job counters — incremented by the TTS job processor on each outcome.
+ * `ttsJobTotal` is the denominator for the TTS failure-rate SLI:
+ * `ttsJobFailedTotal / ttsJobTotal`.
+ */
+export const ttsJobTotal = new Counter({
+  name: 'tts_job_total',
+  help: 'Total number of TTS job processing attempts (success or failure)',
+  labelNames: ['status'] as const,
+  registers: [register],
+});
+
+export const ttsJobFailedTotal = new Counter({
+  name: 'tts_job_failed_total',
+  help: 'Total number of TTS job processing attempts that failed with an error',
+  registers: [register],
+});
+
+/**
+ * TTS job processing duration histogram (ms).
+ * Observed once per TTS job run, labelled by outcome status.
+ */
+export const ttsJobDuration = new Histogram({
+  name: 'tts_job_duration_ms',
+  help: 'TTS job processing duration in milliseconds',
+  labelNames: ['status'] as const,
+  buckets,
   registers: [register],
 });
 

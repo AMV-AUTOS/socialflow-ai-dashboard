@@ -89,11 +89,21 @@ async function processNotificationJob(job: any) {
           await getSmsService().send(recipient, _message);
           break;
         case 'slack':
-          // await slackService.send(recipient, message);
-          break;
+          // The Slack delivery implementation is not wired up yet. Fail the
+          // job distinctly instead of silently reporting success so callers
+          // and queue stats (getNotificationQueueStats/getFailedNotifications)
+          // reflect the channel as failing until it is implemented.
+          throw new Error(
+            `Notification channel 'slack' is not implemented; refusing to report success for job ${job.id}`,
+          );
         case 'discord':
-          // await discordService.send(recipient, message);
-          break;
+          // The Discord delivery implementation is not wired up yet. Fail the
+          // job distinctly instead of silently reporting success so callers
+          // and queue stats (getNotificationQueueStats/getFailedNotifications)
+          // reflect the channel as failing until it is implemented.
+          throw new Error(
+            `Notification channel 'discord' is not implemented; refusing to report success for job ${job.id}`,
+          );
         default:
           console.warn(`Unknown notification type: ${type}`);
       }
@@ -142,19 +152,7 @@ const workerConfigs = {
       concurrency: 2,
     },
     contract: {
-      processor: processSyncContractJob,
-      concurrency: 3,
-    },
-    deploy: {
-      processor: processDeployContractJob,
-      concurrency: 1, // Only one deployment at a time
-    },
-  },
-  notification: {
-    processor: processNotificationJob,
-    concurrency: 15,
-  },
-};
+      processor: processS
 
 // Initialize all workers
 export function initializeWorkers(): Map<string, Worker> {
